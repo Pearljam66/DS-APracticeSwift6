@@ -41,48 +41,41 @@ struct MinimumWindowSubstringTest {
 
     class Solution {
         func minWindow(_ s: String, _ t: String) -> String {
-            guard !t.isEmpty else {
-                return ""
-            }
-            // Convert strings to character arrays for easier indexing
-            let sChars = Array(s)
-            let tChars = Array(t)
+            guard !t.isEmpty else { return "" }
 
-            // Create frequency maps
-            var tFreq = [Character: Int]()
-            for char in tChars {
-                tFreq[char, default: 0] += 1
+            var needCount = [Character: Int]()
+            for char in t {
+                needCount[char, default: 0] += 1
             }
 
-            var windowFreq = [Character: Int]()
+            var windowCount = [Character: Int]()
             var have = 0
-            let need = tFreq.count
+            let need = needCount.count
 
-            var result = ""
-            var minLength = Int.max
+            var result = (0, -1)  // (start, length)
             var left = 0
+            let sChars = Array(s)
 
             for right in 0..<sChars.count {
                 let rightChar = sChars[right]
 
-                if tFreq[rightChar] != nil {
-                    windowFreq[rightChar, default: 0] += 1
-                    if windowFreq[rightChar] == tFreq[rightChar] {
+                if let count = needCount[rightChar] {
+                    windowCount[rightChar, default: 0] += 1
+                    if windowCount[rightChar] == count {
                         have += 1
                     }
                 }
 
                 while have == need {
                     // Update result if current window is smaller
-                    if right - left + 1 < minLength {
-                        minLength = right - left + 1
-                        result = String(sChars[left...right])
+                    if result.1 == -1 || right - left + 1 < result.1 {
+                        result = (left, right - left + 1)
                     }
 
                     let leftChar = sChars[left]
-                    if tFreq[leftChar] != nil {
-                        windowFreq[leftChar]! -= 1
-                        if windowFreq[leftChar]! < tFreq[leftChar]! {
+                    if let count = needCount[leftChar] {
+                        windowCount[leftChar]! -= 1
+                        if windowCount[leftChar]! < count {
                             have -= 1
                         }
                     }
@@ -90,7 +83,8 @@ struct MinimumWindowSubstringTest {
                     left += 1
                 }
             }
-            return result
+
+            return result.1 == -1 ? "" : String(sChars[result.0..<(result.0 + result.1)])
         }
     }
 
