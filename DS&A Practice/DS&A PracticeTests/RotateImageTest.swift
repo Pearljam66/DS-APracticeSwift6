@@ -35,7 +35,6 @@ struct RotateImageTest {
 
             let n = matrix.count
 
-            // Step 1: Transpose the matrix
             for i in 0..<n {
                 for j in i..<n {
                     let temp = matrix[i][j]
@@ -44,12 +43,10 @@ struct RotateImageTest {
                 }
             }
 
-            // Step 2: Reverse each row
             for i in 0..<n {
                 matrix[i].reverse()
             }
         }
-
     }
 
     @Test func exampleOne() {
