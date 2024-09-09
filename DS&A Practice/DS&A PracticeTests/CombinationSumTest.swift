@@ -41,7 +41,7 @@ struct CombinationSumTest {
 
     class Solution {
         func combinationSum(_ candidates: [Int], _ target: Int) -> [[Int]] {
-            var candidates = candidates.sorted()
+            let candidates = candidates.sorted()
             var result: [[Int]] = []
 
             func backtrack(_ combination: [Int], _ start: Int, _ target: Int) {
@@ -55,7 +55,7 @@ struct CombinationSumTest {
                     if candidates[i] > target { break }
 
                     // Include the current number in the combination
-                    var newCombination = combination + [candidates[i]]
+                    let newCombination = combination + [candidates[i]]
                     backtrack(newCombination, i, target - candidates[i])
                 }
             }
