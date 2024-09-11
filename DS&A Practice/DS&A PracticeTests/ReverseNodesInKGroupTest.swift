@@ -69,7 +69,7 @@ struct ReverseNodesInKGroupTest {
                 let nextGroup = kthNode.next
 
                 // Reverse the group
-                var curr = prev?.next
+                let curr = prev?.next
                 var nxt: ListNode? = nil
                 for _ in 0..<k {
                     nxt = curr?.next
