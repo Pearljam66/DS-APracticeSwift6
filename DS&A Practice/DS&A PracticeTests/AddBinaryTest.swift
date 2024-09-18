@@ -31,8 +31,8 @@ struct AddBinaryTest {
             var result = ""
             var carry = 0
 
-            var aChars = Array(a.reversed())
-            var bChars = Array(b.reversed())
+            let aChars = Array(a.reversed())
+            let bChars = Array(b.reversed())
 
             let maxLength = max(aChars.count, bChars.count)
 
