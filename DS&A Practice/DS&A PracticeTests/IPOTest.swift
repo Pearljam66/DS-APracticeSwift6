@@ -63,7 +63,6 @@ struct IPOTest {
         }
     }
 
-    // MaxHeap implementation
     struct MaxHeap<Element: Comparable> {
         private var elements: [Element] = []
 
