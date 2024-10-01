@@ -40,7 +40,6 @@
  s1, s2, and s3 consist of lowercase English letters.
  */
 
-// TODO: Fix, has memory issues
 import Testing
 
 struct InterleavingStringTest {
@@ -48,42 +47,59 @@ struct InterleavingStringTest {
     class Solution {
         func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
             // Convert strings to arrays of characters for easier indexing
-            let s1Chars = Array(s1), s2Chars = Array(s2), s3Chars = Array(s3)
+            let chars1 = Array(s1), chars2 = Array(s2), chars3 = Array(s3)
+            let len1 = chars1.count, len2 = chars2.count, len3 = chars3.count
 
-            let len1 = s1Chars.count, len2 = s2Chars.count, len3 = s3Chars.count
-
-            // If the lengths do not add up, return false immediately
+            // If s3 length does not match sum of s1 and s2 lengths, return false
             if len1 + len2 != len3 {
                 return false
             }
 
-            // dp[i][j] represents if s3 up to i+j can be formed by interleaving of s1 up to i and s2 up to j
-            var dp = Array(repeating: Array(repeating: false, count: len2 + 1), count: len1 + 1)
+            // Edge case: if all strings are empty or s2 is empty and s1 matches s3 or vice versa
+            if len1 == 0 && len2 == 0 && len3 == 0 {
+                return true
+            }
+            if len2 == 0 {
+                return s1 == s3
+            }
+            if len1 == 0 {
+                return s2 == s3
+            }
 
-            // Base case: empty strings interleave to form an empty string
+            // 2D array for dynamic programming, we add 1 to lengths for base cases (empty string)
+            var dp = [[Bool]](repeating: [Bool](repeating: false, count: len2 + 1), count: len1 + 1)
+
+            // Base case - empty strings interleave to form an empty string
             dp[0][0] = true
 
-            // Fill first row (s1 is empty)
+            // Fill first row where s2 could be empty
             for j in 1...len2 {
-                dp[0][j] = dp[0][j-1] && (s2Chars[j-1] == s3Chars[j-1])
-            }
-
-            // Fill first column (s2 is empty)
-            for i in 1...len1 {
-                dp[i][0] = dp[i-1][0] && (s1Chars[i-1] == s3Chars[i-1])
-            }
-
-            // Fill the rest of the dp table
-            for i in 1...len1 {
-                for j in 1...len2 {
-                    // If the current character in s3 matches with s1, we take the result from above
-                    // or if it matches with s2, we take the result from left
-                    dp[i][j] = (dp[i-1][j] && s3Chars[i+j-1] == s1Chars[i-1]) ||
-                    (dp[i][j-1] && s3Chars[i+j-1] == s2Chars[j-1])
+                if chars2[j-1] == chars3[j-1] {
+                    dp[0][j] = dp[0][j-1]
+                } else {
+                    break // No need to continue if we don't match
                 }
             }
 
-            // The result is in the bottom right corner of dp
+            // Fill first column where s1 could match with s3
+            for i in 1...len1 {
+                if chars1[i-1] == chars3[i-1] {
+                    dp[i][0] = dp[i-1][0]
+                } else {
+                    break // No need to continue if we don't match
+                }
+            }
+
+            // Fill the dp table
+            for i in 1...len1 {
+                for j in 1...len2 {
+                    // Check if we can match with s1 or s2
+                    if (chars1[i-1] == chars3[i+j-1] && dp[i-1][j]) ||
+                        (chars2[j-1] == chars3[i+j-1] && dp[i][j-1]) {
+                        dp[i][j] = true
+                    }
+                }
+            }
             return dp[len1][len2]
         }
     }
