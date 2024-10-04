@@ -68,7 +68,6 @@ struct RemoveElementTest {
     @Test func example1() {
         var nums: [Int] = [3, 2, 2, 3]
         let val: Int = 3
-        let expectedNums: [Int] = [2, 2, 0, 0]
         let solution = Solution()
         #expect(solution.removeElement(&nums, val) == 2)
     }
@@ -76,7 +75,6 @@ struct RemoveElementTest {
     @Test func example2() {
         var nums: [Int] = [0, 1, 2, 2, 3, 0, 4, 2]
         let val: Int = 2
-        let expectedNums: [Int] = [0, 1, 4, 0, 3, 0, 0, 0]
         let solution = Solution()
         #expect(solution.removeElement(&nums, val) == 5)
     }
